@@ -50,7 +50,6 @@
     const ACCENT      = '#6366f1';
     const STORAGE_KEY = 'daily-wins-habits';
     const LANG_KEY    = 'daily-wins-lang';
-    const APIKEY_KEY  = 'daily-wins-apikey';
 
     const CATEGORIES = ['Fitness', 'Mindfulness', 'Learning', 'Productivity', 'Job Application'];
 
@@ -93,9 +92,6 @@
         markUndone:     'Mark incomplete',
         aiLoading:      '✨ Getting your boost…',
         aiError:        'Great job — keep it up! 💪',
-        settingsTitle:  'Settings',
-        apiKeyLabel:    'Anthropic API Key',
-        apiKeyNote:     'Stored in your browser only. Powers motivational messages.',
         cats: {
           'Fitness':         'Fitness',
           'Mindfulness':     'Mindfulness',
@@ -133,9 +129,6 @@
         markUndone:     'Markierung aufheben',
         aiLoading:      '✨ Motivation lädt…',
         aiError:        'Super gemacht – weiter so! 💪',
-        settingsTitle:  'Einstellungen',
-        apiKeyLabel:    'Anthropic API-Schlüssel',
-        apiKeyNote:     'Nur in deinem Browser gespeichert. Aktiviert motivierende Nachrichten.',
         cats: {
           'Fitness':         'Fitness',
           'Mindfulness':     'Achtsamkeit',
@@ -191,7 +184,6 @@
     const IconTrash  = () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>;
     const IconPlus   = () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" className="w-6 h-6"><path d="M12 5v14M5 12h14"/></svg>;
     const IconTrophy = () => <span style={{fontSize:'1.25rem', lineHeight:1}}>🏆</span>;
-    const IconGear   = () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>;
 
     // ─── Toast ────────────────────────────────────────────────────────────────
     function Toast({ message, onDismiss }) {
@@ -213,61 +205,6 @@
               <span className="text-base flex-shrink-0 mt-0.5">✨</span>
               <span className="flex-1">{message}</span>
               <span className="opacity-50 text-lg flex-shrink-0 leading-none">×</span>
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    // ─── SettingsModal ────────────────────────────────────────────────────────
-    function SettingsModal({ lang, apiKey, onSave, onCancel }) {
-      const T = I18N[lang];
-      const [key, setKey] = useState(apiKey);
-      const inputRef = useRef(null);
-      useEffect(() => { setTimeout(() => inputRef.current?.focus(), 80); }, []);
-
-      return (
-        <div
-          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center px-4 pb-4 sm:pb-0 animate-fadein"
-          style={{ background: 'rgba(15,23,42,0.55)', backdropFilter: 'blur(6px)' }}
-          onClick={(e) => e.target === e.currentTarget && onCancel()}
-        >
-          <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden animate-slideup">
-            <div className="flex items-center justify-between px-6 pt-6 pb-4">
-              <h2 className="text-lg font-bold text-gray-900">{T.settingsTitle}</h2>
-              <button onClick={onCancel} className="w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 transition text-lg leading-none">×</button>
-            </div>
-            <div className="px-6 pb-6 space-y-4">
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">{T.apiKeyLabel}</label>
-                <input
-                  ref={inputRef}
-                  type="password"
-                  value={key}
-                  onChange={e => setKey(e.target.value)}
-                  placeholder="sk-ant-..."
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 text-base font-mono transition"
-                  style={{ caretColor: ACCENT }}
-                />
-                <p className="text-xs text-gray-400 mt-2">{T.apiKeyNote}</p>
-              </div>
-              <div className="flex gap-3">
-                <button
-                  type="button"
-                  onClick={onCancel}
-                  className="flex-1 py-3.5 rounded-xl border border-gray-200 text-gray-600 font-semibold hover:bg-gray-50 transition active:scale-95"
-                >
-                  {T.cancel}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => onSave(key.trim())}
-                  className="flex-1 py-3.5 rounded-xl text-white font-bold transition hover:opacity-90 active:scale-95"
-                  style={{ background: ACCENT, boxShadow: `0 4px 14px ${ACCENT}50` }}
-                >
-                  {T.save}
-                </button>
-              </div>
             </div>
           </div>
         </div>
@@ -484,12 +421,10 @@
 
     // ─── App ───────────────────────────────────────────────────────────────────
     function App() {
-      const [habits,       setHabits]       = useState(loadHabits);
-      const [lang,         setLang]         = useState(loadLang);
-      const [modal,        setModal]        = useState(null); // null | 'add' | habit object
-      const [apiKey,       setApiKey]       = useState(() => localStorage.getItem(APIKEY_KEY) || '');
-      const [toast,        setToast]        = useState(null);
-      const [settingsOpen, setSettingsOpen] = useState(false);
+      const [habits, setHabits] = useState(loadHabits);
+      const [lang,   setLang]   = useState(loadLang);
+      const [modal,  setModal]  = useState(null); // null | 'add' | habit object
+      const [toast,  setToast]  = useState(null);
 
       const T       = I18N[lang];
       const todayD  = today();
@@ -505,34 +440,20 @@
 
       // ── Handlers ──
       const fetchMotivation = useCallback(async (habitName, streak) => {
-        if (!apiKey) return;
         setToast(T.aiLoading);
         try {
-          const prompt = lang === 'de'
-            ? `Ich habe gerade meine Gewohnheit "${habitName}" abgeschlossen! Aktuelle Serie: ${streak} ${streak === 1 ? 'Tag' : 'Tage'}. Schreib eine kurze, motivierende Nachricht auf Deutsch (max. 2 Sätze).`
-            : `I just completed my habit "${habitName}"! Current streak: ${streak} ${streak === 1 ? 'day' : 'days'}. Write a short, energizing motivational message (max 2 sentences).`;
-          const res = await fetch('https://api.anthropic.com/v1/messages', {
+          const res = await fetch('/api/motivate', {
             method: 'POST',
-            headers: {
-              'x-api-key': apiKey,
-              'anthropic-version': '2023-06-01',
-              'content-type': 'application/json',
-              'anthropic-dangerous-direct-browser-access': 'true',
-            },
-            body: JSON.stringify({
-              model: 'claude-haiku-4-5',
-              max_tokens: 120,
-              messages: [{ role: 'user', content: prompt }],
-            }),
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ habitName, streak, lang }),
           });
           if (!res.ok) throw new Error('api');
           const data = await res.json();
-          const msg = data.content?.[0]?.text?.trim();
-          setToast(msg || T.aiError);
+          setToast(data.message || T.aiError);
         } catch {
           setToast(T.aiError);
         }
-      }, [apiKey, lang, T]);
+      }, [lang, T]);
 
       const toggleHabit = useCallback((id) => {
         setHabits(prev => {
@@ -549,12 +470,6 @@
           return prev.map(x => x.id !== id ? x : { ...x, completedDates: newDates });
         });
       }, [todayD, fetchMotivation]);
-
-      const saveApiKey = useCallback((key) => {
-        setApiKey(key);
-        localStorage.setItem(APIKEY_KEY, key);
-        setSettingsOpen(false);
-      }, []);
 
       const saveHabit = useCallback(({ name, category }) => {
         if (modal === 'add') {
@@ -585,16 +500,6 @@
                 </span>
               </div>
 
-              {/* Settings + Language */}
-              <div className="flex items-center gap-2">
-              <button
-                onClick={() => setSettingsOpen(true)}
-                className="p-1.5 rounded-xl text-gray-400 hover:text-indigo-500 hover:bg-indigo-50 transition"
-                aria-label={T.settingsTitle}
-                title={T.settingsTitle}
-              >
-                <IconGear />
-              </button>
               {/* Language pill */}
               <div className="flex items-center p-1 gap-0.5 rounded-xl" style={{ background: '#f1f5f9' }}>
                 {['en', 'de'].map(l => (
@@ -611,7 +516,6 @@
                     {l.toUpperCase()}
                   </button>
                 ))}
-              </div>
               </div>
             </div>
           </header>
@@ -715,16 +619,6 @@
               habit={modal === 'add' ? null : modal}
               onSave={saveHabit}
               onCancel={() => setModal(null)}
-            />
-          )}
-
-          {/* ── Settings ── */}
-          {settingsOpen && (
-            <SettingsModal
-              lang={lang}
-              apiKey={apiKey}
-              onSave={saveApiKey}
-              onCancel={() => setSettingsOpen(false)}
             />
           )}
 
